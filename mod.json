@@ -1,0 +1,218 @@
+{
+	"geode": "5.11.2",
+	"gd": {
+		"win": "*",
+		"android": "*",
+		"mac": "*",
+		"ios": "*"
+	},
+	"version": "v1.0.0",
+	"id": "minixx.spam-assist",
+	"name": "Spam Assist",
+	"developer": "Minixx",
+	"description": "Detects when you start spamming and takes over with an even, alternate spam. Rewrite with iOS support.",
+	"tags": ["gameplay"],
+	"settings": {
+		"title-general": { "type": "title", "name": "General" },
+		"enabled": {
+			"type": "bool",
+			"name": "Enabled",
+			"description": "Master switch for the assist.",
+			"default": true
+		},
+		"mode": {
+			"type": "string",
+			"name": "Spam Speed Mode",
+			"description": "Match: copies your detected speed (smoothed). Fixed: always uses the Fixed CPS setting.",
+			"default": "Match",
+			"one-of": ["Match", "Fixed"]
+		},
+		"fixed-cps": {
+			"type": "float",
+			"name": "Fixed CPS",
+			"description": "Spam speed used in Fixed mode.",
+			"default": 12.0,
+			"min": 3.0,
+			"max": 30.0,
+			"control": { "slider": true, "input": true }
+		},
+		"max-cps": {
+			"type": "float",
+			"name": "Max CPS Cap",
+			"description": "The assist never clicks faster than this.",
+			"default": 20.0,
+			"min": 5.0,
+			"max": 40.0,
+			"control": { "slider": true, "input": true }
+		},
+		"duty-cycle": {
+			"type": "int",
+			"name": "Hold Percentage",
+			"description": "How much of each click cycle the button is held down (50 = equal press and release).",
+			"default": 50,
+			"min": 10,
+			"max": 90,
+			"control": { "slider": true, "input": true }
+		},
+		"alternate-players": {
+			"type": "bool",
+			"name": "Alternate Players (Dual)",
+			"description": "In dual mode, each auto click goes to Player 1 then Player 2 alternately instead of both at once.",
+			"default": false
+		},
+		"show-indicator": {
+			"type": "bool",
+			"name": "Show Indicator",
+			"description": "Shows a small label in the top left while the assist is active.",
+			"default": true
+		},
+
+		"title-detection": { "type": "title", "name": "Detection" },
+		"cps-threshold": {
+			"type": "float",
+			"name": "Activation CPS",
+			"description": "The assist kicks in once your real clicking speed reaches this many clicks per second.",
+			"default": 8.0,
+			"min": 3.0,
+			"max": 30.0,
+			"control": { "slider": true, "input": true }
+		},
+		"min-clicks": {
+			"type": "int",
+			"name": "Min Clicks To Detect",
+			"description": "How many clicks inside the detection window are needed before the CPS is trusted.",
+			"default": 5,
+			"min": 3,
+			"max": 15,
+			"control": { "slider": true, "input": true }
+		},
+		"window-ms": {
+			"type": "int",
+			"name": "Detection Window (ms)",
+			"description": "How far back clicks are counted when measuring CPS.",
+			"default": 1000,
+			"min": 300,
+			"max": 3000,
+			"control": { "slider": true, "input": true }
+		},
+		"smart-detect": {
+			"type": "bool",
+			"name": "Smart Detect",
+			"description": "Only activates when your clicks look like real rhythmic spam (even timing, not slowing down).",
+			"default": true
+		},
+		"consistency": {
+			"type": "float",
+			"name": "Smart Detect Tolerance",
+			"description": "Max timing variation allowed between clicks (0.05 = very strict, 1.0 = very loose).",
+			"default": 0.35,
+			"min": 0.05,
+			"max": 1.0,
+			"control": { "slider": true, "input": true },
+			"enable-if": "smart-detect"
+		},
+		"hold-release-ms": {
+			"type": "int",
+			"name": "Hold Override (ms)",
+			"description": "If you hold the button longer than this, the assist hands control back to you immediately.",
+			"default": 250,
+			"min": 100,
+			"max": 1000,
+			"control": { "slider": true, "input": true }
+		},
+		"idle-timeout-ms": {
+			"type": "int",
+			"name": "Stop When Idle (ms)",
+			"description": "The assist stops this long after your last real input.",
+			"default": 400,
+			"min": 150,
+			"max": 2000,
+			"control": { "slider": true, "input": true }
+		},
+
+		"title-wave": { "type": "title", "name": "Wave" },
+		"wave-direction": {
+			"type": "string",
+			"name": "Wave Spam Direction",
+			"description": "Match Me: copies whether your zigzag climbs, falls or runs straight. Straight / Up / Down: always use that direction.",
+			"default": "Match Me",
+			"one-of": ["Match Me", "Straight", "Up", "Down"]
+		},
+		"wave-steepness": {
+			"type": "int",
+			"name": "Wave Up/Down Steepness (%)",
+			"description": "Hold percentage used when the direction is Up (Down uses the opposite). Higher = steeper.",
+			"default": 70,
+			"min": 55,
+			"max": 90,
+			"control": { "slider": true, "input": true }
+		},
+		"wave-deadzone": {
+			"type": "int",
+			"name": "Straight Dead Zone (%)",
+			"description": "In Match Me mode, a zigzag within this many percent of even counts as straight.",
+			"default": 7,
+			"min": 0,
+			"max": 20,
+			"control": { "slider": true, "input": true }
+		},
+
+		"title-ship": { "type": "title", "name": "Ship" },
+		"ship-straight": {
+			"type": "bool",
+			"name": "Ship Straight Flight",
+			"description": "In ship, the hold length is adjusted so the ship stays at the height where the assist started.",
+			"default": true
+		},
+		"ship-correction": {
+			"type": "float",
+			"name": "Ship Correction Strength",
+			"description": "How hard the ship is steered back to its locked height. Raise it if it drifts, lower it if it wobbles.",
+			"default": 1.0,
+			"min": 0.2,
+			"max": 3.0,
+			"control": { "slider": true, "input": true }
+		},
+
+		"title-human": { "type": "title", "name": "Humanization" },
+		"humanize": {
+			"type": "bool",
+			"name": "Humanization",
+			"description": "Adds natural variation to the spam.",
+			"default": true
+		},
+		"humanize-timing": {
+			"type": "float",
+			"name": "Timing Variation (%)",
+			"description": "Random variation applied to each press and release.",
+			"default": 10.0,
+			"min": 0.0,
+			"max": 40.0,
+			"control": { "slider": true, "input": true }
+		},
+		"humanize-drift": {
+			"type": "float",
+			"name": "CPS Drift",
+			"description": "How far (in CPS) the spam speed slowly wanders up and down.",
+			"default": 0.5,
+			"min": 0.0,
+			"max": 3.0,
+			"control": { "slider": true, "input": true }
+		},
+		"humanize-miss": {
+			"type": "float",
+			"name": "Missed Click Chance (%)",
+			"description": "Chance that a click is skipped. Never applies in ship.",
+			"default": 0.0,
+			"min": 0.0,
+			"max": 10.0,
+			"control": { "slider": true, "input": true }
+		},
+		"humanize-ship": {
+			"type": "bool",
+			"name": "Humanize In Ship",
+			"description": "Also apply humanization in ship. Makes the flight slightly less straight.",
+			"default": false
+		}
+	}
+}
